@@ -1,0 +1,179 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Mohd Rehan Sageer | Backend and Frontend Intern</title>
+<meta name="description" content="BCA graduate from Lucknow with SQL and database design skills, looking for a remote backend or frontend internship.">
+<meta property="og:title" content="Mohd Rehan Sageer | Backend and Frontend Intern">
+<meta property="og:description" content="BCA graduate from Lucknow. SQL, DBMS, Hospital Management System project. Open to remote internships.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:wght@600;800&family=DM+Sans:wght@400;500;700&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
+<style>
+:root{--bg:#eef3f8;--surface:#fff;--ink:#0f1b2d;--mute:#4b5b73;--line:#d3dcea;--accent:#2354e6;--accent-ink:#fff;--ok:#0b7a4b;--learn:#a15c00;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#0a111d;--surface:#111b2c;--ink:#e8eef8;--mute:#9db0cc;--line:#223250;--accent:#7ca2ff;--accent-ink:#0a111d;--ok:#4fd49a;--learn:#f0b04f}}
+:root[data-theme="dark"]{--bg:#0a111d;--surface:#111b2c;--ink:#e8eef8;--mute:#9db0cc;--line:#223250;--accent:#7ca2ff;--accent-ink:#0a111d;--ok:#4fd49a;--learn:#f0b04f}
+html{scroll-padding-top:env(safe-area-inset-top,0px);scroll-behavior:smooth}
+body{margin:0;background:var(--bg);color:var(--ink);font-family:"DM Sans",system-ui,sans-serif}
+:focus-visible{outline:3px solid var(--accent);outline-offset:3px;border-radius:6px}
+@keyframes rise{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:none}}
+.rise{animation:rise .6s ease both}
+@media (prefers-reduced-motion:reduce){html{scroll-behavior:auto}.rise{animation:none}}
+</style>
+<script src="https://cdn.tailwindcss.com/3.4.17"></script>
+<script>
+tailwind.config={theme:{extend:{colors:{bg:'var(--bg)',surface:'var(--surface)',ink:'var(--ink)',mute:'var(--mute)',line:'var(--line)',accent:'var(--accent)',onaccent:'var(--accent-ink)',ok:'var(--ok)',learn:'var(--learn)'},fontFamily:{display:['Bricolage Grotesque','DM Sans','sans-serif'],sans:['DM Sans','system-ui','sans-serif'],mono:['JetBrains Mono','ui-monospace','monospace']}}}}
+</script>
+</head>
+<body>
+<div id="root"></div>
+<script src="https://cdn.jsdelivr.net/npm/react@18.3.1/umd/react.production.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/react-dom@18.3.1/umd/react-dom.production.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/htm@3.1.1/dist/htm.umd.js"></script>
+<script>
+const {useState}=React;
+const html=htm.bind(React.createElement);
+const EMAIL='rsageer@student.iul.ac.in';
+const APPTS=[
+{p:'Aisha K.',d:'Dr. Verma',t:'10:00'},
+{p:'Ravi S.',d:'Dr. Khan',t:'10:30'},
+{p:'Meera P.',d:'Dr. Verma',t:'11:00'},
+{p:'Imran A.',d:'Dr. Khan',t:'11:30'}
+];
+const DOCS=['All doctors','Dr. Verma','Dr. Khan'];
+const card='rounded-2xl border border-line bg-surface p-5';
+const H2=({children})=>html`<h2 className="font-display font-extrabold text-3xl sm:text-4xl tracking-tight mb-3">${children}</h2>`;
+
+function Demo(){
+  const [view,setView]=useState('b');
+  const [doc,setDoc]=useState('All doctors');
+  const rows=APPTS.filter(a=>doc==='All doctors'||a.d===doc);
+  const tab=(id,label)=>html`<button role="tab" aria-selected=${view===id} onClick=${()=>setView(id)}
+    className=${'flex-1 py-3 text-sm font-semibold border-b-4 '+(view===id?'text-white border-[#7ca2ff]':'text-[#8ea4c9] border-transparent')}>${label}</button>`;
+  const chip=n=>html`<button key=${n} onClick=${()=>setDoc(n)} aria-pressed=${doc===n}
+    className=${'rounded-full px-3 py-1 text-xs font-semibold border '+(doc===n?'bg-[#7ca2ff] text-[#0a111d] border-[#7ca2ff]':'text-[#c5d4ef] border-[#35476b]')}>${n}</button>`;
+  const K=({children})=>html`<span className="text-[#7ca2ff]">${children}</span>`;
+  const lines=[
+    html`<${K}>SELECT<//> p.name, d.name <${K}>AS<//> doctor, a.slot`,
+    html`<${K}>FROM<//> appointments a`,
+    html`<${K}>JOIN<//> patients p <${K}>ON<//> p.id = a.patient_id`,
+    html`<${K}>JOIN<//> doctors d <${K}>ON<//> d.id = a.doctor_id`,
+    html`<${K}>WHERE<//> a.date = <span className="text-[#6ee7b7]">CURDATE</span>()`,
+    doc!=='All doctors'?html`<span className="text-[#6ee7b7]"><${K}>AND<//> d.name = '${doc}'</span>`:null,
+    html`<${K}>ORDER BY<//> a.slot;`
+  ].filter(Boolean);
+  return html`<div className="rise rounded-2xl overflow-hidden border border-[#243452] bg-[#0c1424] text-[#dbe6fa] shadow-2xl">
+    <div role="tablist" className="flex border-b border-[#243452]">${tab('b','Backend view')}${tab('f','Frontend view')}</div>
+    <div className="p-4 sm:p-5 min-h-[330px]">
+      <div className="flex flex-wrap gap-2 mb-4" role="group" aria-label="Filter by doctor">${DOCS.map(chip)}</div>
+      ${view==='b'?html`<div>
+        <pre className="font-mono text-[13px] leading-6 overflow-x-auto mb-4">${lines.map((l,i)=>html`<div key=${i}>${l}</div>`)}</pre>
+        <p className="font-mono text-xs text-[#8ea4c9] mb-2">${rows.length} rows returned</p>
+        <div className="grid gap-2">${rows.map(r=>html`<div key=${r.t} className="flex justify-between rounded-lg bg-[#121d33] px-3 py-2 text-sm"><span>${r.p} <span className="text-[#8ea4c9]">with ${r.d}</span></span><b className="font-mono text-[#6ee7b7]">${r.t}</b></div>`)}</div>
+      </div>`:html`<div className="rounded-xl bg-[#f7faff] text-[#0f1b2d] p-4">
+        <h4 className="font-display font-extrabold mb-1">Today’s appointments</h4>
+        ${rows.map(r=>html`<div key=${r.t} className="flex items-center justify-between gap-3 py-3 border-t border-[#dbe4f2]"><div className="font-bold">${r.p}<div className="text-sm font-normal text-[#4b5b73]">${r.d}</div></div><span className="rounded-full bg-[#dfe9ff] text-[#1b3fae] px-3 py-1 text-sm font-semibold">${r.t}</span></div>`)}
+      </div>`}
+      <p className="text-xs text-[#8ea4c9] mt-3">Pick a doctor: the SQL and the screen change together. Sample data.</p>
+    </div>
+  </div>`;
+}
+
+function Skill({n,level}){
+  const ok=level==='Ready';
+  return html`<div className="flex justify-between gap-3 py-3 border-t border-line first:border-t-0"><span>${n}</span><span className=${'font-bold whitespace-nowrap '+(ok?'text-ok':'text-learn')}>${level}</span></div>`;
+}
+
+function Copy(){
+  const [done,setDone]=useState(false);
+  const go=async()=>{
+    try{await navigator.clipboard.writeText(EMAIL);setDone(true);setTimeout(()=>setDone(false),2000);}
+    catch(e){window.location.href='mailto:'+EMAIL;}
+  };
+  return html`<button onClick=${go} className="rounded-lg border-2 border-current px-3 py-1 text-sm font-bold">${done?'Copied':'Copy email'}</button>`;
+}
+
+function App(){
+  const mods=[['Patients','Registration, search and record updates, all backed by SQL queries.'],['Staff','Doctor schedules and appointments, kept consistent with patient records.'],['Admin','Billing and report generation, separated from the other two modules.']];
+  const tables=['patients','doctors','appointments','bills'];
+  const how=[['Reliable','I finish what I start and tell you early if something is blocked.'],['Disciplined','I work in clear steps: understand, design, build, test.'],['Fast learner','I picked up database design from scratch and I’m doing the same with web tools.']];
+  const next=[['A web front end for my hospital database','Appointment list and patient search in the browser.'],['A small REST API','Endpoints for patients and appointments, tested with sample data.'],['A live demo link','Hosted for free, so you can click it instead of reading about it.']];
+  return html`<div className="font-sans text-[17px] leading-relaxed">
+    <header className="max-w-5xl mx-auto px-5 py-5 flex items-center justify-between gap-3">
+      <a href="#top" className="font-display font-extrabold text-lg">Rehan Sageer</a>
+      <nav aria-label="Main" className="flex gap-4 text-mute font-medium text-[15px]">
+        <a href="#project" className="hover:text-ink">Project</a><a href="#skills" className="hover:text-ink">Skills</a><a href="#contact" className="hover:text-ink">Contact</a>
+      </nav>
+    </header>
+    <main id="top" className="max-w-5xl mx-auto px-5">
+      <section className="grid md:grid-cols-[1.05fr_.95fr] gap-10 items-center pt-6 pb-14">
+        <div>
+          <p className="inline-flex items-center gap-2 rounded-full border border-line bg-surface px-3 py-1 text-sm font-medium mb-5"><span className="h-2 w-2 rounded-full bg-ok"></span>Open to remote internships</p>
+          <h1 className="font-display font-extrabold tracking-tight leading-[1.05] text-[2.4rem] sm:text-6xl">I design the database first, then the screen that shows it.</h1>
+          <p className="text-mute text-lg mt-5 mb-7 max-w-[56ch]">I’m a BCA graduate from Lucknow looking for a remote backend or frontend internship. My Hospital Management System keeps patients, doctors, appointments and billing in one SQL database.</p>
+          <div className="flex flex-wrap gap-3">
+            <a href=${'mailto:'+EMAIL+'?subject=Internship%20opportunity'} className="rounded-xl bg-accent text-onaccent border-2 border-accent px-5 py-3 font-bold">Email me</a>
+            <a href="#project" className="rounded-xl text-accent border-2 border-accent px-5 py-3 font-bold">See my project</a>
+          </div>
+        </div>
+        <${Demo}/>
+      </section>
+
+      <section className="grid grid-cols-2 md:grid-cols-4 rounded-2xl border border-line bg-surface mb-16 overflow-hidden">
+        ${[['SQL','Core skill'],['1 project','Built end to end'],['3 languages','Hindi, English, Urdu'],['Remote ready','Lucknow, IST']].map(([a,b],i)=>html`<div key=${a} className=${'p-5 border-line '+(i<2?'border-b md:border-b-0 ':'')+(i%2===0?'border-r ':'')+(i===1?'md:border-r ':'')}><strong className="block font-display font-extrabold text-xl">${a}</strong><span className="text-mute text-sm">${b}</span></div>`)}
+      </section>
+
+      <section id="project" className="mb-20">
+        <${H2}>Hospital Management System<//>
+        <p className="text-mute max-w-[62ch] mb-6">My BCA final year project. One database-driven application that brings the hospital front desk into a single place, from first registration to final bill.</p>
+        <div className="grid md:grid-cols-3 gap-4 mb-6">
+          ${mods.map(([t,d])=>html`<div key=${t} className=${card+' border-l-[5px] border-l-accent'}><h3 className="font-display font-semibold text-xl">${t}</h3><p className="text-mute mt-2 text-[15px]">${d}</p></div>`)}
+        </div>
+        <p className="font-semibold mb-2">Sample tables behind it</p>
+        <div className="flex flex-wrap gap-2 mb-6">${tables.map(t=>html`<code key=${t} className="font-mono text-sm rounded-md border border-line bg-surface px-3 py-1">${t}</code>`)}</div>
+        <ul className="list-disc pl-5 space-y-2 max-w-[64ch]">
+          <li>Structured hospital data with core DBMS concepts so records stay accurate and easy to retrieve.</li>
+          <li>Split the code into patient, staff and admin modules, so new features can be added without touching the rest.</li>
+          <li>Went through the full cycle: requirement analysis, database design, implementation.</li>
+        </ul>
+      </section>
+
+      <section id="skills" className="mb-20">
+        <${H2}>Skills<//>
+        <p className="text-mute mb-6">Green means I can use it on a real task today. Orange means I’m learning it right now.</p>
+        <div className="grid md:grid-cols-2 gap-5">
+          <div className=${card}><h3 className="font-display font-semibold text-xl mb-2">Backend</h3>
+            <${Skill} n="Database design (DBMS)" level="Ready"/><${Skill} n="SQL: SELECT, INSERT, UPDATE, DELETE" level="Ready"/><${Skill} n="SQL JOINS" level="Ready"/><${Skill} n="Node.js and Express" level="Learning"/></div>
+          <div className=${card}><h3 className="font-display font-semibold text-xl mb-2">Frontend</h3>
+            <${Skill} n="HTML and CSS" level="Learning"/><${Skill} n="JavaScript and React" level="Learning"/><${Skill} n="MS Office: Word, Excel, PowerPoint" level="Ready"/><${Skill} n="Problem solving" level="Ready"/></div>
+        </div>
+      </section>
+
+      <section className="mb-20">
+        <${H2}>How I work<//>
+        <div className="grid md:grid-cols-3 gap-4 mt-4">${how.map(([t,d])=>html`<div key=${t} className=${card}><h3 className="font-display font-semibold text-lg">${t}</h3><p className="text-mute text-[15px] mt-1">${d}</p></div>`)}</div>
+      </section>
+
+      <section className="mb-20">
+        <${H2}>What I’m building next<//>
+        <ul className="grid gap-3 mt-4 max-w-3xl">${next.map(([t,d])=>html`<li key=${t} className="rounded-xl border border-dashed border-accent bg-surface px-5 py-4"><b className="block">${t}</b><span className="text-mute">${d}</span></li>`)}</ul>
+      </section>
+
+      <section id="contact" className="mb-12 rounded-3xl bg-ink text-bg px-7 py-10">
+        <h2 className="font-display font-extrabold text-3xl sm:text-4xl tracking-tight mb-3">Let’s talk about an internship</h2>
+        <p className="opacity-85 max-w-[56ch]">I can start right away and work remotely. Send me a small task and I’ll show you how I work.</p>
+        <div className="grid gap-3 mt-6 text-lg">
+          <div className="flex flex-wrap items-center gap-3"><a className="font-bold underline" href=${'mailto:'+EMAIL}>${EMAIL}</a><${Copy}/></div>
+          <a className="font-bold underline w-fit" href="tel:+916306923824">+91 6306923824</a>
+          <span>GitHub: github.com/your-username</span>
+          <span>LinkedIn: linkedin.com/in/your-name</span>
+        </div>
+      </section>
+    </main>
+    <footer className="max-w-5xl mx-auto px-5 pb-10 text-mute text-sm">Mohd Rehan Sageer, BCA, Integral University, Lucknow. Built with React and Tailwind CSS.</footer>
+  </div>`;
+}
+ReactDOM.createRoot(document.getElementById('root')).render(html`<${App}/>`);
+</script>
+</body>
+</html>
